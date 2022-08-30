@@ -20,11 +20,7 @@ public interface EMIGuiApi {
 
     public void getDrawItem(ItemStack stack, int x, int y, String amountText);
 
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers);
-
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta);
-
-    public boolean mouseClicked(double mouseX, double mouseY, int button);
+    public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
     default public void drawSlotHighlight(MatrixStack matrices, int x, int y, int z){
         HandledScreen.drawSlotHighlight(matrices, x, y, z);

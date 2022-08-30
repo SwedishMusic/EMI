@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Method;
 
@@ -37,13 +38,7 @@ public abstract class InventoryInjector implements EMIGuiApi {
 
     @Override
     public void getRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {
-        try {
-            Method m = Screen.class.getDeclaredMethod("renderTooltip", new Class[]{MatrixStack.class, ItemStack.class, int.class, int.class});
-            m.setAccessible(true);
-            m.invoke(this, new Object[]{matrices, stack, x, y});
-        } catch (Exception e) {
-
-        }
+        ((ScreenInjector)((Object)this)).getScreenRenderTooltip(matrices, stack, x, y);
     }
 
     @Override @Invoker("drawItem")
@@ -51,21 +46,15 @@ public abstract class InventoryInjector implements EMIGuiApi {
 
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V", args = {"log=true"}))
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info){
-
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    @Inject(method = "keyPressed", at = @At("HEAD"))
+    public boolean getKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable info) {
         return false;
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    public boolean getMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable info) {
         return false;
     }
 
