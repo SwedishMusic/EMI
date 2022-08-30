@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.hared.emi.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "InventoryInjector"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

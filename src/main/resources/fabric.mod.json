@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "emi",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "Extra Many Items",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -18,12 +18,12 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "client": [
+      "dev.hared.emi.EMI"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "emi.mixins.json"
   ],
 
   "depends": {
