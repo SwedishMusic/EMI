@@ -1,6 +1,8 @@
 package dev.hared.emi.mixin;
 
-import dev.hared.emi.api.EMIGuiApi;
+import dev.hared.emi.api.EMIGuiAPI;
+import dev.hared.emi.api.IKeyboardInput;
+import dev.hared.emi.api.IMouseInput;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,9 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 @Mixin(HandledScreen.class)
-public abstract class InventoryInjector implements EMIGuiApi {
+public abstract class InventoryInjector implements EMIGuiAPI {
+
+    private ArrayList<IKeyboardInput> ki = new ArrayList<IKeyboardInput>();
+    private ArrayList<IMouseInput> mi = new ArrayList<IMouseInput>();
 
     @Override
     public <T extends HandledScreen> T getGuiObj() {
@@ -48,13 +54,25 @@ public abstract class InventoryInjector implements EMIGuiApi {
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info){
     }
 
+    @Override
+    public void addKeyboardListener(IKeyboardInput ki) {
+        this.ki.add(ki);
+    }
+
+    @Override
+    public void addMouseListener(IMouseInput mi) {
+        this.mi.add(mi);
+    }
+
     @Inject(method = "keyPressed", at = @At("HEAD"))
     public boolean getKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable info) {
+        this.ki.forEach(iKeyboardInput -> {iKeyboardInput.keyPressed(keyCode, scanCode, modifiers);});
         return false;
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public boolean getMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable info) {
+        this.mi.forEach(iMouseInput -> {iMouseInput.mouseClicked(mouseX, mouseY, button);});
         return false;
     }
 

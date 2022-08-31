@@ -1,2 +1,4 @@
-package dev.hared.emi;public class EMIAbstractGui {
+package dev.hared.emi;
+
+public class EMIAbstractGui {
 }
