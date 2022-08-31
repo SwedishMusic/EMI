@@ -2,12 +2,10 @@ package dev.hared.emi.gui;
 
 import dev.hared.emi.api.EMIGuiAPI;
 
-public class EMIAbstractGui {
+public abstract class EMIAbstractGui {
 
-    protected EMIGuiAPI api;
+    public EMIGuiAPI api;
 
-    public EMIAbstractGui(EMIGuiAPI api){
-        this.api = api;
-    }
+    public abstract void initGUI();
 
 }

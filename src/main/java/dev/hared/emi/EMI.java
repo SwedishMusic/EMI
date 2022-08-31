@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class EMI implements ClientModInitializer {
 
     private HashMap<String, EMIAbstractGui> guiRegistry = new HashMap<String, EMIAbstractGui>();
+    private EMIAbstractGui currentGUI;
 
     private static EMI modInstance;
 
@@ -21,12 +22,17 @@ public class EMI implements ClientModInitializer {
         return modInstance;
     }
 
-    public <T extends EMIAbstractGui> boolean addEMIGUI(Class<T> clazz){
+    public <T extends EMIAbstractGui> boolean addEMIGUI(T emiGui){
+        if(!this.guiRegistry.containsKey(emiGui.getClass().getName())){
+            this.guiRegistry.put(emiGui.getClass().getName(), emiGui);
+            return true;
+        }
         return false;
     }
 
     public void onGUITick(EMIGuiAPI api) {
-
+        if(this.currentGUI != null)
+            this.currentGUI.api = api;
     }
 
 }
