@@ -11,6 +11,8 @@ public interface EMIGuiAPI {
     static ArrayList<IKeyboardInput> ki = new ArrayList<IKeyboardInput>();
     static ArrayList<IMouseInput> mi = new ArrayList<IMouseInput>();
 
+    static ArrayList<IEMIRender> ir = new ArrayList<IEMIRender>();
+
     public <T extends HandledScreen> T getGuiObj();
 
     public int getX();
@@ -33,6 +35,10 @@ public interface EMIGuiAPI {
 
     public static void addKeyboardListener(IKeyboardInput keyboardInput){
         ki.add(keyboardInput);
+    }
+
+    public static void addIEMIRenderer(IEMIRender renderer){
+        ir.add(renderer);
     }
 
     default public void drawSlotHighlight(MatrixStack matrices, int x, int y, int z){

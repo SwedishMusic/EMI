@@ -49,17 +49,18 @@ public abstract class InventoryInjector implements EMIGuiAPI {
 
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V"))
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info){
+        ir.forEach(iEmiRender -> iEmiRender.render(matrices, mouseX, mouseY, delta));
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"))
     public boolean getKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable info) {
-        ki.forEach(iKeyboardInput -> {iKeyboardInput.keyPressed(keyCode, scanCode, modifiers);});
+        ki.forEach(iKeyboardInput -> iKeyboardInput.keyPressed(keyCode, scanCode, modifiers));
         return false;
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public boolean getMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable info) {
-        mi.forEach(iMouseInput -> {iMouseInput.mouseClicked(mouseX, mouseY, button);});
+        mi.forEach(iMouseInput -> iMouseInput.mouseClicked(mouseX, mouseY, button));
         return false;
     }
 
