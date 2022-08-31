@@ -10,7 +10,6 @@ public interface EMIGuiAPI {
 
     static ArrayList<IKeyboardInput> ki = new ArrayList<IKeyboardInput>();
     static ArrayList<IMouseInput> mi = new ArrayList<IMouseInput>();
-
     static ArrayList<IEMIRender> ir = new ArrayList<IEMIRender>();
 
     public <T extends HandledScreen> T getGuiObj();
