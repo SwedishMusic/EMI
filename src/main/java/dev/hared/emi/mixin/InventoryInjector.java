@@ -22,9 +22,6 @@ import java.util.ArrayList;
 @Mixin(HandledScreen.class)
 public abstract class InventoryInjector implements EMIGuiAPI {
 
-    private ArrayList<IKeyboardInput> ki = new ArrayList<IKeyboardInput>();
-    private ArrayList<IMouseInput> mi = new ArrayList<IMouseInput>();
-
     @Override
     public <T extends HandledScreen> T getGuiObj() {
         return (T)((Object)this);
@@ -50,29 +47,19 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     @Override @Invoker("drawItem")
     public abstract void getDrawItem(ItemStack stack, int x, int y, String amountText);
 
-    @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V", args = {"log=true"}))
+    @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V"))
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info){
-    }
-
-    @Override
-    public void addKeyboardListener(IKeyboardInput ki) {
-        this.ki.add(ki);
-    }
-
-    @Override
-    public void addMouseListener(IMouseInput mi) {
-        this.mi.add(mi);
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"))
     public boolean getKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable info) {
-        this.ki.forEach(iKeyboardInput -> {iKeyboardInput.keyPressed(keyCode, scanCode, modifiers);});
+        ki.forEach(iKeyboardInput -> {iKeyboardInput.keyPressed(keyCode, scanCode, modifiers);});
         return false;
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public boolean getMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable info) {
-        this.mi.forEach(iMouseInput -> {iMouseInput.mouseClicked(mouseX, mouseY, button);});
+        mi.forEach(iMouseInput -> {iMouseInput.mouseClicked(mouseX, mouseY, button);});
         return false;
     }
 

@@ -1,6 +1,8 @@
 package dev.hared.emi;
 
 import dev.hared.emi.api.EMIGuiAPI;
+import dev.hared.emi.api.IKeyboardInput;
+import dev.hared.emi.api.IMouseInput;
 import dev.hared.emi.gui.EMIAbstractGui;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -25,6 +27,8 @@ public class EMI implements ClientModInitializer {
     public <T extends EMIAbstractGui> boolean addEMIGUI(T emiGui){
         if(!this.guiRegistry.containsKey(emiGui.getClass().getName())){
             this.guiRegistry.put(emiGui.getClass().getName(), emiGui);
+            EMIGuiAPI.addKeyboardListener((keyCode, scanCode, modifiers) -> emiGui.keyboardInput(keyCode, scanCode, modifiers));
+            EMIGuiAPI.addMouseListener(((mouseX, mouseY, button) -> emiGui.mouseInput(mouseX, mouseY, button)));
             return true;
         }
         return false;

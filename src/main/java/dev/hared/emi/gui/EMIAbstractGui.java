@@ -8,4 +8,8 @@ public abstract class EMIAbstractGui {
 
     public abstract void initGUI();
 
+    public abstract void keyboardInput(int keyCode, int scanCode, int modifiers);
+
+    public abstract void mouseInput(double mouseX, double mouseY, int button);
+
 }
