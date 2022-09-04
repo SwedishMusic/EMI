@@ -3,6 +3,7 @@ package dev.hared.emi.api;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ public interface EMIGuiAPI {
 
     public int getY();
 
-    public int getTitleX();
+    public int getInventoryX();
 
-    public int getTitleY();
+    public int getInventoryY();
 
     public void getRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y);
 
@@ -40,8 +41,8 @@ public interface EMIGuiAPI {
         ir.add(renderer);
     }
 
-    default public void drawSlotHighlight(MatrixStack matrices, int x, int y, int z){
-        HandledScreen.drawSlotHighlight(matrices, x, y, z);
+    default public void drawSlotHighlight(MatrixStack matrices, int x, int y){
+        HandledScreen.drawSlotHighlight(matrices, x, y, this.getGuiObj().getZOffset());
     }
 
 }

@@ -6,6 +6,7 @@ import dev.hared.emi.api.IMouseInput;
 import dev.hared.emi.gui.EMIAbstractGui;
 import dev.hared.emi.gui.EMIBasicGui;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.HashMap;
 
@@ -30,12 +31,17 @@ public class EMI implements ClientModInitializer {
     public <T extends EMIAbstractGui> boolean addEMIGUI(T emiGui){
         if(!this.guiRegistry.containsKey(emiGui.getClass().getName())){
             this.guiRegistry.put(emiGui.getClass().getName(), emiGui);
-            EMIGuiAPI.addIEMIRenderer(((matrices, mouseX, mouseY, delta) -> emiGui.render(matrices, mouseX, mouseY, delta)));
+            EMIGuiAPI.addIEMIRenderer(((matrices, mouseX, mouseY, delta) -> this.handleRenderer(matrices, mouseX, mouseY, delta, emiGui)));
             EMIGuiAPI.addKeyboardListener((keyCode, scanCode, modifiers) -> emiGui.keyboardInput(keyCode, scanCode, modifiers));
             EMIGuiAPI.addMouseListener(((mouseX, mouseY, button) -> emiGui.mouseInput(mouseX, mouseY, button)));
             return true;
         }
         return false;
+    }
+
+    private <T extends EMIAbstractGui> void handleRenderer(MatrixStack matrices, int mouseX, int mouseY, float delta, T emiGui) {
+        if(this.currentGUI.api != null)
+            emiGui.render(matrices, mouseX, mouseY, delta);
     }
 
     public boolean setGUI(String clazz){

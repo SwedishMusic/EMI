@@ -1,6 +1,10 @@
 package dev.hared.emi.gui;
 
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
+
+import java.awt.*;
 
 public class EMIBasicGui extends EMIAbstractGui{
 
@@ -21,6 +25,5 @@ public class EMIBasicGui extends EMIAbstractGui{
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        System.out.println("On render");
     }
 }

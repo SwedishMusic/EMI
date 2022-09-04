@@ -22,22 +22,31 @@ import java.util.ArrayList;
 @Mixin(HandledScreen.class)
 public abstract class InventoryInjector implements EMIGuiAPI {
 
+    @Shadow
+    protected int x;
+    @Shadow
+    protected int y;
+
     @Override
     public <T extends HandledScreen> T getGuiObj() {
         return (T)((Object)this);
     }
 
-    @Override @Accessor("x")
-    public abstract int getX();
+    @Override @Accessor("backgroundWidth")
+    public abstract int getInventoryX();
 
-    @Override @Accessor("y")
-    public abstract int getY();
+    @Override @Accessor("backgroundHeight")
+    public abstract int getInventoryY();
 
-    @Override @Accessor("titleX")
-    public abstract int getTitleX();
+    @Override
+    public int getX(){
+        return 0 - this.x;
+    }
 
-    @Override @Accessor("titleY")
-    public abstract int getTitleY();
+    @Override
+    public int getY(){
+        return 0 - this.y;
+    }
 
     @Override
     public void getRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {
