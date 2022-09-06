@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 public interface EMIGuiAPI {
 
-    static ArrayList<IKeyboardInput> ki = new ArrayList<IKeyboardInput>();
-    static ArrayList<IMouseInput> mi = new ArrayList<IMouseInput>();
-    static ArrayList<IEMIRender> ir = new ArrayList<IEMIRender>();
+    static ArrayList<IEMIListener> listener = new ArrayList<IEMIListener>();
 
     public <T extends HandledScreen> T getGuiObj();
 
@@ -29,16 +27,8 @@ public interface EMIGuiAPI {
 
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
-    public static void addMouseListener(IMouseInput mouseInput){
-        mi.add(mouseInput);
-    }
-
-    public static void addKeyboardListener(IKeyboardInput keyboardInput){
-        ki.add(keyboardInput);
-    }
-
-    public static void addIEMIRenderer(IEMIRender renderer){
-        ir.add(renderer);
+    public static void addListener(IEMIListener emilistener){
+        listener.add(emilistener);
     }
 
     default public void drawSlotHighlight(MatrixStack matrices, int x, int y){

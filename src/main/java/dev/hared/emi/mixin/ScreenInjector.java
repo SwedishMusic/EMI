@@ -13,16 +13,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
-public abstract class ScreenInjector {
+public interface ScreenInjector {
 
     @Invoker("renderTooltip")
-    public abstract void getScreenRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y);
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void onTick(CallbackInfo ci) {
-        if(this instanceof EMIGuiAPI){
-            EMI.getInstance().onGUITick((EMIGuiAPI)(Object)this);
-        }
-    }
+    public void getScreenRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y);
 
 }

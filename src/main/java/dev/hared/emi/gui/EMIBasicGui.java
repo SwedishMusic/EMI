@@ -25,5 +25,7 @@ public class EMIBasicGui extends EMIAbstractGui{
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        Color color = new Color(57, 63, 71, 100);
+        DrawableHelper.fill(matrices, this.api.getInventoryX()+2, this.api.getY()+2, this.api.getX()+this.api.getGuiObj().width-2, this.api.getY() + this.api.getGuiObj().height-2, color.hashCode());
     }
 }

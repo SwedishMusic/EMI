@@ -1,8 +1,7 @@
 package dev.hared.emi;
 
 import dev.hared.emi.api.EMIGuiAPI;
-import dev.hared.emi.api.IKeyboardInput;
-import dev.hared.emi.api.IMouseInput;
+import dev.hared.emi.api.IEMIListener;
 import dev.hared.emi.gui.EMIAbstractGui;
 import dev.hared.emi.gui.EMIBasicGui;
 import net.fabricmc.api.ClientModInitializer;
@@ -10,7 +9,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.HashMap;
 
-public class EMI implements ClientModInitializer {
+public class EMI implements ClientModInitializer, IEMIListener {
 
     private HashMap<String, EMIAbstractGui> guiRegistry = new HashMap<String, EMIAbstractGui>();
     private EMIAbstractGui currentGUI;
@@ -19,6 +18,7 @@ public class EMI implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(){
+        EMIGuiAPI.addListener(this);
         modInstance = this;
         this.addEMIGUI(new EMIBasicGui());
         this.currentGUI = this.guiRegistry.get(EMIBasicGui.class.getName());
@@ -31,9 +31,6 @@ public class EMI implements ClientModInitializer {
     public <T extends EMIAbstractGui> boolean addEMIGUI(T emiGui){
         if(!this.guiRegistry.containsKey(emiGui.getClass().getName())){
             this.guiRegistry.put(emiGui.getClass().getName(), emiGui);
-            EMIGuiAPI.addIEMIRenderer(((matrices, mouseX, mouseY, delta) -> this.handleRenderer(matrices, mouseX, mouseY, delta, emiGui)));
-            EMIGuiAPI.addKeyboardListener((keyCode, scanCode, modifiers) -> emiGui.keyboardInput(keyCode, scanCode, modifiers));
-            EMIGuiAPI.addMouseListener(((mouseX, mouseY, button) -> emiGui.mouseInput(mouseX, mouseY, button)));
             return true;
         }
         return false;
@@ -53,8 +50,24 @@ public class EMI implements ClientModInitializer {
         return false;
     }
 
-    public void onGUITick(EMIGuiAPI api) {
-        this.currentGUI.api = api;
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if(this.currentGUI.api != null)
+            this.currentGUI.render(matrices, mouseX, mouseY, delta);
     }
 
+    @Override
+    public void keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.currentGUI.keyboardInput(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public void mouseClicked(double mouseX, double mouseY, int button) {
+        this.currentGUI.mouseInput(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void tick(EMIGuiAPI api) {
+        this.currentGUI.api = api;
+    }
 }
