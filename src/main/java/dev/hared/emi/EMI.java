@@ -1,11 +1,13 @@
 package dev.hared.emi;
 
 import dev.hared.emi.api.EMIGuiAPI;
+import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.IEMIListener;
 import dev.hared.emi.gui.EMIAbstractGui;
 import dev.hared.emi.gui.EMIBasicGui;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
 import java.util.HashMap;
 
@@ -36,7 +38,7 @@ public class EMI implements ClientModInitializer, IEMIListener {
         return false;
     }
 
-    private <T extends EMIAbstractGui> void handleRenderer(MatrixStack matrices, int mouseX, int mouseY, float delta, T emiGui) {
+    private <T extends EMIAbstractGui> void handleRenderer(EMIMatrix matrices, int mouseX, int mouseY, float delta, T emiGui) {
         if(this.currentGUI.api != null)
             emiGui.render(matrices, mouseX, mouseY, delta);
     }
@@ -51,8 +53,7 @@ public class EMI implements ClientModInitializer, IEMIListener {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if(this.currentGUI.api != null)
+    public void render(EMIMatrix matrices, int mouseX, int mouseY, float delta) {
             this.currentGUI.render(matrices, mouseX, mouseY, delta);
     }
 
@@ -67,7 +68,7 @@ public class EMI implements ClientModInitializer, IEMIListener {
     }
 
     @Override
-    public void tick(EMIGuiAPI api) {
+    public void getAPI(EMIGuiAPI api) {
         this.currentGUI.api = api;
     }
 }

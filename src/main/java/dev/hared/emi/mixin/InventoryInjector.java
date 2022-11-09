@@ -2,9 +2,15 @@ package dev.hared.emi.mixin;
 
 import dev.hared.emi.EMI;
 import dev.hared.emi.api.EMIGuiAPI;
+import dev.hared.emi.api.EMIMatrix;
+import dev.hared.emi.api.EMIStack;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -14,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+
 @Mixin(HandledScreen.class)
 public abstract class InventoryInjector implements EMIGuiAPI {
 
@@ -22,16 +30,26 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     @Shadow
     protected int y;
 
-    @Override
+    /*@Override
     public <T extends HandledScreen> T getGuiObj() {
         return (T)((Object)this);
-    }
+    }*/
 
     @Override @Accessor("backgroundWidth")
     public abstract int getInventoryX();
 
     @Override @Accessor("backgroundHeight")
     public abstract int getInventoryY();
+
+    @Override
+    public int getWidth(){
+        return this.getObj().width;
+    }
+
+    @Override
+    public int getHeight(){
+        return this.getObj().height;
+    }
 
     @Override
     public int getX(){
@@ -43,28 +61,62 @@ public abstract class InventoryInjector implements EMIGuiAPI {
         return 0 - this.y;
     }
 
-    @Override
-    public void getRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y) {
-        ((ScreenInjector)((Object)this)).getScreenRenderTooltip(matrices, stack, x, y);
+    public HandledScreen getObj(){
+        return (HandledScreen)(Object)this;
     }
 
-    @Override @Invoker("drawItem")
-    public abstract void getDrawItem(ItemStack stack, int x, int y, String amountText);
+    @Override
+    public void drawSquare(EMIMatrix matrices, int x1, int y1, int x2, int y2, int color) {
+        DrawableHelper.fill(this.getMatrix(matrices), x1, y1, x2, y2, color);
+    }
+
+    public MatrixStack getMatrix(EMIMatrix matrix){
+        return (MatrixStack)(Object)matrix;
+    }
+
+    public ItemStack getStack(EMIStack stack){
+        return (ItemStack)(Object)stack;
+    }
+
+    @Override
+    public void drawSlotHighlight(EMIMatrix matrices, int x, int y) {
+        HandledScreen.drawSlotHighlight(this.getMatrix(matrices), x, y, this.getObj().getZOffset());
+    }
+
+    @Override
+    public void getRenderTooltip(EMIMatrix matrices, EMIStack stack, int x, int y) {
+        ((ScreenInjector)((Object)this)).getScreenRenderTooltipStack(this.getMatrix(matrices), this.getStack(stack), x, y);
+    }
+
+    @Override
+    public void getRenderTooltipString(EMIMatrix matrices, ArrayList<String> tip, int x, int y) {
+        ArrayList<Text> text = new ArrayList<Text>();
+        for(String string : tip){
+            text.add(Text.literal(string));
+        }
+        this.getObj().renderTooltip(this.getMatrix(matrices), text, x, y);
+    }
+
+    @Override
+    public void getDrawItem(EMIStack stack, int x, int y, String amountText) {
+        this.intDrawItem(this.getStack(stack), x, y, amountText);
+    }
+
+    @Invoker("drawItem")
+    public abstract void intDrawItem(ItemStack stack, int x, int y, String amountText);
 
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V"))
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info){
-        listener.forEach(listener -> listener.render(matrices, mouseX, mouseY, delta));
+        listener.forEach(listener -> {
+            listener.getAPI(this);
+            listener.render((EMIMatrix)(Object)matrices, mouseX, mouseY, delta);
+        });
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"))
     public boolean getKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable info) {
         listener.forEach(listener -> listener.keyPressed(keyCode, scanCode, modifiers));
         return false;
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void onTick(CallbackInfo ci) {
-        listener.forEach(listener -> listener.tick((EMIGuiAPI)(Object)this));
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))

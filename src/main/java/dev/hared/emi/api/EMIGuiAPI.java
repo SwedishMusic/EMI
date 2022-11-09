@@ -11,28 +11,33 @@ public interface EMIGuiAPI {
 
     static ArrayList<IEMIListener> listener = new ArrayList<IEMIListener>();
 
-    public <T extends HandledScreen> T getGuiObj();
+    //public <T extends HandledScreen> T getGuiObj();
 
     public int getX();
 
     public int getY();
 
+    public int getWidth();
+
+    public int getHeight();
+
     public int getInventoryX();
 
     public int getInventoryY();
 
-    public void getRenderTooltip(MatrixStack matrices, ItemStack stack, int x, int y);
+    public void drawSquare(EMIMatrix matrices, int x1, int y1, int x2, int y2, int color);
 
-    public void getDrawItem(ItemStack stack, int x, int y, String amountText);
+    public void getRenderTooltip(EMIMatrix matrices, EMIStack stack, int x, int y);
 
-    public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    public void getRenderTooltipString(EMIMatrix matrices, ArrayList<String> tip, int x, int y);
+
+    public void getDrawItem(EMIStack stack, int x, int y, String amountText);
 
     public static void addListener(IEMIListener emilistener){
         listener.add(emilistener);
     }
 
-    default public void drawSlotHighlight(MatrixStack matrices, int x, int y){
-        HandledScreen.drawSlotHighlight(matrices, x, y, this.getGuiObj().getZOffset());
-    }
+    public  void drawSlotHighlight(EMIMatrix matrices, int x, int y);
+
 
 }

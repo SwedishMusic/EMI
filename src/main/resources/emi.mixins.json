@@ -7,7 +7,9 @@
   ],
   "client": [
     "InventoryInjector",
-    "ScreenInjector"
+    "ScreenInjector",
+    "MatrixMixin",
+    "StackMixin"
   ],
   "injectors": {
     "defaultRequire": 1
