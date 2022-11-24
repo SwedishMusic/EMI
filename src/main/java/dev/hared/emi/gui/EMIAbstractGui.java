@@ -15,7 +15,7 @@ public abstract class EMIAbstractGui {
 
     public abstract void render(EMIMatrix matrices, int mouseX, int mouseY, float delta);
 
-    public void drawEMIStack(EMIMatrix matrices, int mouseX, int mouseY, EMISlot slot){
+    public void drawEMISlot(EMIMatrix matrices, int mouseX, int mouseY, EMISlot slot){
         slot.updateSlot(mouseX, mouseY);
 
         api.getDrawItem(slot.getStack(), slot.getX(), slot.getY(), "");
