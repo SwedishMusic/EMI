@@ -6,8 +6,6 @@ import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.EMIStack;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -21,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(HandledScreen.class)
 public abstract class InventoryInjector implements EMIGuiAPI {
@@ -89,7 +88,7 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     }
 
     @Override
-    public void getRenderTooltipString(EMIMatrix matrices, ArrayList<String> tip, int x, int y) {
+    public void getRenderTooltipString(EMIMatrix matrices, List<String> tip, int x, int y) {
         ArrayList<Text> text = new ArrayList<Text>();
         for(String string : tip){
             text.add(Text.literal(string));
@@ -125,5 +124,8 @@ public abstract class InventoryInjector implements EMIGuiAPI {
         return false;
     }
 
-
+    @Override
+    public EMIStack[] getAllItems() {
+        return EMI.getInstance().EMIItemList();
+    }
 }

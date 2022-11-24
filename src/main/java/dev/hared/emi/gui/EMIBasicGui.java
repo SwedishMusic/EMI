@@ -1,17 +1,10 @@
 package dev.hared.emi.gui;
 
+import dev.hared.emi.EMI;
 import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.EMIStack;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class EMIBasicGui extends EMIAbstractGui{
 
@@ -21,6 +14,20 @@ public class EMIBasicGui extends EMIAbstractGui{
     private int leftX;
 
     protected final int base = 16;
+
+    private final EMIStack grass;
+    private final EMIStack star;
+    private final EMIStack table;
+    private final EMIStack command;
+    private final EMIStack save;
+
+    public EMIBasicGui(){
+        grass = EMI.getInstance().getItem("grass_block");
+        star = EMI.getInstance().getItem("nether_star");
+        table = EMI.getInstance().getItem("crafting_table");
+        command = EMI.getInstance().getItem("command_block");
+        save = EMI.getInstance().getItem("writable_book");
+    }
 
     @Override
     public void initGUI() {
@@ -46,15 +53,28 @@ public class EMIBasicGui extends EMIAbstractGui{
         Color color = new Color(57, 63, 71, 100);
         this.api.drawSquare(matrices, this.leftX, this.topY, this.rightX, this.bottomY, color.hashCode());
         color = new Color(57, 63, 71, 120);
-        this.api.drawSquare(matrices, this.leftX+2, this.topY+2, this.rightX-2, this.topY+17, color.hashCode());
+        int barLeft = this.leftX + 2;
+        int barRight = this.rightX - 2;
+        this.api.drawSquare(matrices, barLeft, this.topY+1, barRight, this.topY+17, color.hashCode());
 
-        //Chest icon
-        ItemStack chest = new ItemStack(Blocks.CHEST);
-        this.api.getDrawItem((EMIStack)(Object)chest, this.leftX + 2, this.topY+1, "");
-        ArrayList<String> s = new ArrayList<String>();
-        s.add("Test");
-        s.add("Tip");
-        this.api.getRenderTooltipString(matrices, s,this.leftX + 2, this.topY+1);
-        topY = this.api.getY()+18;
+        this.drawEMINavBar(mouseX, mouseY, barLeft, barRight);
+
+    }
+
+    private void drawEMINavBar(int mouseX, int mouseY, int xL, int xR){
+        int i = xR-xL;
+        System.out.println(i);
+        i-= 4 + (base*5);
+        i /= 4;
+        int x = xL+2;
+        this.api.getDrawItem(grass, x, this.topY+1, "");
+        x += i + base;
+        this.api.getDrawItem(star, x, this.topY+1, "");
+        x += i + base;
+        this.api.getDrawItem(table, x, this.topY+1, "");
+        x += i + base;
+        this.api.getDrawItem(command,x, this.topY+1, "");
+        x += i + base;
+        this.api.getDrawItem(save, x, this.topY+1, "");
     }
 }

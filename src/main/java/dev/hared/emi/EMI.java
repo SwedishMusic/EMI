@@ -2,12 +2,19 @@ package dev.hared.emi;
 
 import dev.hared.emi.api.EMIGuiAPI;
 import dev.hared.emi.api.EMIMatrix;
+import dev.hared.emi.api.EMIStack;
 import dev.hared.emi.api.IEMIListener;
 import dev.hared.emi.gui.EMIAbstractGui;
 import dev.hared.emi.gui.EMIBasicGui;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
 
@@ -15,6 +22,8 @@ public class EMI implements ClientModInitializer, IEMIListener {
 
     private HashMap<String, EMIAbstractGui> guiRegistry = new HashMap<String, EMIAbstractGui>();
     private EMIAbstractGui currentGUI;
+
+    private EMIStack[] emiItems;
 
     private static EMI modInstance;
 
@@ -71,4 +80,19 @@ public class EMI implements ClientModInitializer, IEMIListener {
     public void getAPI(EMIGuiAPI api) {
         this.currentGUI.api = api;
     }
+
+    public EMIStack[] EMIItemList() {
+        if(emiItems == null){
+            emiItems = new EMIStack[Registry.ITEM.size()];
+            for(int i = 0; i < Registry.ITEM.size(); i++){
+                emiItems[i] = (EMIStack)(Object)new ItemStack(Registry.ITEM.get(i));
+            }
+        }
+        return emiItems;
+    }
+
+    public EMIStack getItem(String id){
+        return (EMIStack)(Object)new ItemStack(Registry.ITEM.get(new Identifier(id)));
+    }
+
 }
