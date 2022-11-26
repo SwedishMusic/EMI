@@ -9,7 +9,8 @@
     "InventoryInjector",
     "ScreenInjector",
     "MatrixMixin",
-    "StackMixin"
+    "StackMixin",
+    "TextBoxMixin"
   ],
   "injectors": {
     "defaultRequire": 1

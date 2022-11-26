@@ -5,10 +5,15 @@ import dev.hared.emi.api.EMIStack;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EMIBasicGui extends EMIAbstractGui{
     protected final int base = 16;
+
+    protected int barLeft;
+
+    protected int barRight;
 
     private final EMISlot grass = new EMISlot();
     private final EMISlot star = new EMISlot();
@@ -66,8 +71,8 @@ public class EMIBasicGui extends EMIAbstractGui{
         Color color = new Color(57, 63, 71, 100);
         this.api.drawSquare(matrices, this.leftX, this.topY, this.rightX, this.bottomY, color.hashCode());
         color = new Color(57, 63, 71, 120);
-        int barLeft = this.leftX + 2;
-        int barRight = this.rightX - 2;
+        barLeft = this.leftX + 2;
+        barRight = this.rightX - 2;
         this.api.drawSquare(matrices, barLeft, this.topY+1, barRight, this.topY+17, color.hashCode());
         this.updateEMINavBar(barLeft, barRight);
         this.drawEMINavBar(matrices, mouseX, mouseY);
@@ -105,5 +110,32 @@ public class EMIBasicGui extends EMIAbstractGui{
         x += i + base;
         save.setX(x);
         save.setY(this.topY+1);
+    }
+
+    protected HashMap<Integer, List<EMIStack>> getItemMap(int rightX, int leftX, int topY, int bottomY, List<EMIStack> items){
+
+        int row = leftX-rightX;
+        row -= 2;
+        row /= 18;
+
+        int column = topY-bottomY;
+        column -= 2;
+        column /= 18;
+
+        int slotsPerSide = row*column;
+
+        int totalSides = items.size()/slotsPerSide;
+        totalSides = (totalSides*slotsPerSide) < items.size() ? totalSides+1 : totalSides;
+
+        HashMap<Integer, List<EMIStack>> map = new HashMap<Integer, List<EMIStack>>();
+
+        for(int i = 0; i < totalSides; i++){
+            ArrayList<EMIStack> stacks = new ArrayList<EMIStack>();
+            for(int j = 0; j < slotsPerSide; j++){
+                int index = (j+1)*i;
+            }
+        }
+
+        return null;
     }
 }

@@ -4,9 +4,11 @@ import dev.hared.emi.EMI;
 import dev.hared.emi.api.EMIGuiAPI;
 import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.EMIStack;
+import dev.hared.emi.api.EMITextBox;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -89,6 +91,11 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     }
 
     @Override
+    public EMITextBox createNewTextBox(int x, int y, int width, int height) {
+        return (EMITextBox)(Object)new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, width, height, Text.literal(""));
+    }
+
+    @Override
     public void getRenderTooltipString(EMIMatrix matrices, List<String> tip, int x, int y) {
         ArrayList<Text> text = new ArrayList<Text>();
         for(String string : tip){
@@ -108,6 +115,11 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     @Override
     public int getTextWidth(String text) {
         return MinecraftClient.getInstance().textRenderer.getWidth(text);
+    }
+
+    @Override
+    public int getTextHeight() {
+        return MinecraftClient.getInstance().textRenderer.fontHeight;
     }
 
     @Override
