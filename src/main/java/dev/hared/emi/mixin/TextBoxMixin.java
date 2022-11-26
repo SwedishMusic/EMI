@@ -18,11 +18,15 @@ public abstract class TextBoxMixin implements EMITextBox {
     @Override @Invoker("setText")
     public abstract void setText(String text);
 
-    @Override @Invoker("keyPressed")
-    public abstract void onKey(int keyCode, int scanCode, int modifiers);
+    @Override
+    public void onKey(int keyCode, int scanCode, int modifiers){
+        this.getObj().keyPressed(keyCode, scanCode, modifiers);
+    }
 
-    @Override @Invoker("mouseClicked")
-    public abstract void onMouse(double mouseX, double mouseY, int button);
+    @Override
+    public void onMouse(double mouseX, double mouseY, int button){
+        this.getObj().mouseClicked(mouseX, mouseY, button);
+    }
 
     public TextFieldWidget getObj(){
         return (TextFieldWidget)(Object)this;
