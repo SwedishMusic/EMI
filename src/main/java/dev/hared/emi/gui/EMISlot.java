@@ -1,5 +1,6 @@
 package dev.hared.emi.gui;
 
+import dev.hared.emi.api.EMIGuiAPI;
 import dev.hared.emi.api.EMIStack;
 
 public class EMISlot {
@@ -12,6 +13,8 @@ public class EMISlot {
 
     private boolean hovered = false;
 
+    private boolean set = false;
+
     public EMISlot(EMIStack stack, int x, int y){
         this.stack = stack;
         this.x = x;
@@ -22,8 +25,14 @@ public class EMISlot {
         this(null, 0, 0);
     }
 
-    public void updateSlot(int mouseX, int mouseY){
-        this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + 16 && mouseY < this.y + 16;
+    public void updateSlot(int mouseX, int mouseY, EMIGuiAPI api){
+        int i = this.x;
+        int j = this.y;
+        this.hovered = (mouseX >= i) && (mouseY >= j) && (mouseX < i + 16) && (mouseY < j + 16);
+    }
+
+    public void isSet(boolean set) {
+       this.set = set;
     }
 
     public boolean isHovered() {

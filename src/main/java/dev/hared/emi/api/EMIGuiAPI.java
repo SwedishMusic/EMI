@@ -21,6 +21,8 @@ public interface EMIGuiAPI {
 
     public int getInventoryY();
 
+    public int getTextWidth(String text);
+
     public void drawSquare(EMIMatrix matrices, int x1, int y1, int x2, int y2, int color);
 
     public void getRenderTooltip(EMIMatrix matrices, EMIStack stack, int x, int y);
@@ -34,6 +36,8 @@ public interface EMIGuiAPI {
     }
 
     public  void drawSlotHighlight(EMIMatrix matrices, int x, int y);
+
+    public EMIStack getItem(String id);
 
     public EMIStack[] getAllItems();
 

@@ -4,6 +4,7 @@ import dev.hared.emi.EMI;
 import dev.hared.emi.api.EMIGuiAPI;
 import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.EMIStack;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -104,11 +105,22 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     @Invoker("drawItem")
     public abstract void intDrawItem(ItemStack stack, int x, int y, String amountText);
 
+    @Override
+    public int getTextWidth(String text) {
+        return MinecraftClient.getInstance().textRenderer.getWidth(text);
+    }
+
+    @Override
+    public EMIStack getItem(String id) {
+        return EMI.getInstance().getItem(id);
+    }
+
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V"))
     public void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info){
         listener.forEach(listener -> {
             listener.getAPI(this);
-            listener.render((EMIMatrix)(Object)matrices, mouseX, mouseY, delta);
+            listener.render((EMIMatrix)(Object)matrices, mouseX + this.getX(), mouseY + this.getY()
+                    , delta);
         });
     }
 

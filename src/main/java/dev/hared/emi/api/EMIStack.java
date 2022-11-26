@@ -14,4 +14,6 @@ public interface EMIStack {
 
     public List<String> getToolTip();
 
+    public int getWidth(EMIGuiAPI api);
+
 }
