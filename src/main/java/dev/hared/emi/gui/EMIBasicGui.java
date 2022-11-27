@@ -58,11 +58,13 @@ public class EMIBasicGui extends EMIAbstractGui{
     @Override
     public void keyboardInput(int keyCode, int scanCode, int modifiers) {
         System.out.println("On key");
+        super.keyboardInput(keyCode, scanCode, modifiers);
     }
 
     @Override
     public void mouseInput(double mouseX, double mouseY, int button) {
         System.out.println("On mouse");
+        super.mouseInput(mouseX, mouseY, button);
     }
 
     @Override
