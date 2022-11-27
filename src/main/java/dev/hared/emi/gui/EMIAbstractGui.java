@@ -1,11 +1,15 @@
 package dev.hared.emi.gui;
 
 import dev.hared.emi.api.EMIGuiAPI;
+import dev.hared.emi.api.EMIGuiComponent;
 import dev.hared.emi.api.EMIMatrix;
+
+import java.util.ArrayList;
 
 public abstract class EMIAbstractGui {
 
     public EMIGuiAPI api;
+    protected ArrayList<EMIGuiComponent> components = new ArrayList<EMIGuiComponent>();
     protected int bottomY;
     protected int topY;
     protected int rightX;
@@ -13,15 +17,23 @@ public abstract class EMIAbstractGui {
 
     public abstract void initGUI();
 
-    public abstract void keyboardInput(int keyCode, int scanCode, int modifiers);
+    public void keyboardInput(int keyCode, int scanCode, int modifiers){
+        components.forEach(component -> component.onKey(keyCode, scanCode, modifiers));
+    }
 
-    public abstract void mouseInput(double mouseX, double mouseY, int button);
+    public void mouseInput(double mouseX, double mouseY, int button){
+        components.forEach(component -> component.onMouse(mouseX, mouseY, button));
+    }
 
     public void render(EMIMatrix matrices, int mouseX, int mouseY, float delta){
         leftX = this.api.getInventoryX()+2;
         rightX = this.api.getX() + this.api.getWidth()-2;
         topY = this.api.getY() + 2;
         bottomY = this.api.getY() + this.api.getHeight()-2;
+    }
+
+    public void drawComponents(EMIMatrix matrices, int mouseX, int mouseY, float delta){
+        components.forEach(component -> component.draw(matrices, mouseX, mouseY, delta));
     }
 
     public void drawEMISlot(EMIMatrix matrices, int mouseX, int mouseY, EMISlot slot){

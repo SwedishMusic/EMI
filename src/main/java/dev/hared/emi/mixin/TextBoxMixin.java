@@ -5,7 +5,6 @@ import dev.hared.emi.api.EMITextBox;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(TextFieldWidget.class)
@@ -37,7 +36,7 @@ public abstract class TextBoxMixin implements EMITextBox {
     }
 
     @Override
-    public void drawBox(EMIMatrix matrices, int mouseX, int mouseY, float delta) {
+    public void draw(EMIMatrix matrices, int mouseX, int mouseY, float delta) {
         this.getObj().render(this.getMatrix(matrices), mouseX, mouseY, delta);
     }
 
