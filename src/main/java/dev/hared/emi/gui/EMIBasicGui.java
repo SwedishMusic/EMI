@@ -1,5 +1,6 @@
 package dev.hared.emi.gui;
 
+import dev.hared.emi.api.EMIGuiAPI;
 import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.EMIStack;
 
@@ -20,8 +21,22 @@ public class EMIBasicGui extends EMIAbstractGui{
     private final EMISlot table = new EMISlot();
     private final EMISlot command = new EMISlot();
     private final EMISlot save = new EMISlot();
+    protected int barBottomY;
 
     public EMIBasicGui(){
+
+    }
+
+    private List<String> createSimpleTip(String tip){
+        List<String> tipList = new ArrayList<String>();
+        tipList.add(tip);
+        return tipList;
+    }
+
+    @Override
+    public void initGUI(EMIGuiAPI api) {
+        super.initGUI(api);
+        System.out.println("On init");
         EMIStack grassBlock = api.getItem("grass_block");
         grassBlock.setToolTip(this.createSimpleTip("Items"));
         grass.setStack(grassBlock);
@@ -42,17 +57,12 @@ public class EMIBasicGui extends EMIAbstractGui{
         EMIStack bookItem = api.getItem("writable_book");
         bookItem.setToolTip(this.createSimpleTip("Saved inventories"));
         save.setStack(bookItem);
-    }
 
-    private List<String> createSimpleTip(String tip){
-        List<String> tipList = new ArrayList<String>();
-        tipList.add(tip);
-        return tipList;
-    }
-
-    @Override
-    public void initGUI() {
-        System.out.println("On init");
+        this.components.add(grass);
+        this.components.add(star);
+        this.components.add(table);
+        this.components.add(command);
+        this.components.add(save);
     }
 
     @Override
@@ -75,17 +85,9 @@ public class EMIBasicGui extends EMIAbstractGui{
         color = new Color(57, 63, 71, 120);
         barLeft = this.leftX + 2;
         barRight = this.rightX - 2;
-        this.api.drawSquare(matrices, barLeft, this.topY+1, barRight, this.topY+17, color.hashCode());
+        this.barBottomY = this.topY+17;
+        this.api.drawSquare(matrices, barLeft, this.topY+1, barRight, barBottomY, color.hashCode());
         this.updateEMINavBar(barLeft, barRight);
-        this.drawEMINavBar(matrices, mouseX, mouseY);
-    }
-
-    private void drawEMINavBar(EMIMatrix matrices, int mouseX, int mouseY){
-        this.drawEMISlot(matrices, mouseX, mouseY, grass);
-        this.drawEMISlot(matrices, mouseX, mouseY, star);
-        this.drawEMISlot(matrices, mouseX, mouseY, table);
-        this.drawEMISlot(matrices, mouseX, mouseY, command);
-        this.drawEMISlot(matrices, mouseX, mouseY, save);
     }
 
     private void updateEMINavBar(int xL, int xR){
@@ -131,13 +133,17 @@ public class EMIBasicGui extends EMIAbstractGui{
 
         HashMap<Integer, List<EMIStack>> map = new HashMap<Integer, List<EMIStack>>();
 
+        int index = 0;
+
         for(int i = 0; i < totalSides; i++){
             ArrayList<EMIStack> stacks = new ArrayList<EMIStack>();
             for(int j = 0; j < slotsPerSide; j++){
-                int index = (j+1)*i;
+                stacks.add(items.get(index));
+                index++;
             }
+            map.put(i, stacks);
         }
 
-        return null;
+        return map;
     }
 }

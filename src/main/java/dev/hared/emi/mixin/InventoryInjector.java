@@ -1,13 +1,12 @@
 package dev.hared.emi.mixin;
 
 import dev.hared.emi.EMI;
-import dev.hared.emi.api.EMIGuiAPI;
-import dev.hared.emi.api.EMIMatrix;
-import dev.hared.emi.api.EMIStack;
-import dev.hared.emi.api.EMITextBox;
+import dev.hared.emi.api.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -72,6 +71,12 @@ public abstract class InventoryInjector implements EMIGuiAPI {
         DrawableHelper.fill(this.getMatrix(matrices), x1, y1, x2, y2, color);
     }
 
+    @Override
+    public void addComponent(EMIGuiComponent component) {
+        if(!this.getObj().children().contains(component))
+            ((ScreenInjector)(Object)this.getObj()).addEMIElement(component);
+    }
+
     public MatrixStack getMatrix(EMIMatrix matrix){
         return (MatrixStack)(Object)matrix;
     }
@@ -91,8 +96,8 @@ public abstract class InventoryInjector implements EMIGuiAPI {
     }
 
     @Override
-    public EMITextBox createNewTextBox(int x, int y, int width, int height) {
-        return (EMITextBox)(Object)new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, width, height, Text.literal(""));
+    public EMITextBox createNewTextBox(int x, int y, int width) {
+        return (EMITextBox)(Object)new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, width, this.getTextHeight(), Text.literal(""));
     }
 
     @Override
@@ -144,7 +149,7 @@ public abstract class InventoryInjector implements EMIGuiAPI {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public boolean getMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable info) {
-        listener.forEach(listener -> listener.mouseClicked(mouseX, mouseY, button));
+        listener.forEach(listener -> listener.mouseClicked(mouseX + this.getX(), mouseY + this.getY(), button));
         return false;
     }
 

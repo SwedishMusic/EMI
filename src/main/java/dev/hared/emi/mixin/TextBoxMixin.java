@@ -10,12 +10,11 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(TextFieldWidget.class)
 public abstract class TextBoxMixin implements EMITextBox {
 
-
     @Override @Invoker("getText")
-    public abstract String getText();
+    public abstract String getTextContent();
 
     @Override @Invoker("setText")
-    public abstract void setText(String text);
+    public abstract void setTextContent(String text);
 
     @Override
     public void onKey(int keyCode, int scanCode, int modifiers){
@@ -25,6 +24,11 @@ public abstract class TextBoxMixin implements EMITextBox {
     @Override
     public void onMouse(double mouseX, double mouseY, int button){
         this.getObj().mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean isInUse() {
+        return this.getObj().isActive();
     }
 
     public TextFieldWidget getObj(){
@@ -41,6 +45,11 @@ public abstract class TextBoxMixin implements EMITextBox {
     }
 
     @Override
+    public void writeChar(char chr, int modifiers) {
+        this.getObj().charTyped(chr,  modifiers);
+    }
+
+    @Override
     public void setX(int x) {
         this.getObj().x = x;
     }
@@ -51,7 +60,7 @@ public abstract class TextBoxMixin implements EMITextBox {
     }
 
     @Override
-    public void setWidth(int width) {
+    public void setBoxWidth(int width) {
         this.getObj().setWidth(width);
     }
 

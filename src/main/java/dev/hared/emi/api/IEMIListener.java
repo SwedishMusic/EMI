@@ -6,6 +6,8 @@ public interface IEMIListener {
 
     void keyPressed(int keyCode, int scanCode, int modifiers);
 
+    boolean charInput(char chr, int modifiers);
+
     void mouseClicked(double mouseX, double mouseY, int button);
 
     void getAPI(EMIGuiAPI api);

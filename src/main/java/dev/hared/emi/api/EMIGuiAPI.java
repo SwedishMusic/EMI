@@ -37,9 +37,13 @@ public interface EMIGuiAPI {
         listener.add(emilistener);
     }
 
-    public  void drawSlotHighlight(EMIMatrix matrices, int x, int y);
+    public void drawSlotHighlight(EMIMatrix matrices, int x, int y);
 
-    public EMITextBox createNewTextBox(int x, int y, int width, int height);
+    public void updateFocusedTextBox(EMITextBox textBox);
+
+    public void addComponent(EMIGuiComponent component);
+
+    public EMITextBox createNewTextBox(int x, int y, int width);
 
     public EMIStack getItem(String id);
 

@@ -3,19 +3,37 @@ package dev.hared.emi.gui;
 import dev.hared.emi.api.EMIGuiAPI;
 import dev.hared.emi.api.EMIGuiComponent;
 import dev.hared.emi.api.EMIMatrix;
+import dev.hared.emi.api.EMITextBox;
 
 import java.util.ArrayList;
 
 public abstract class EMIAbstractGui {
 
-    public EMIGuiAPI api;
+    protected EMIGuiAPI api;
     protected ArrayList<EMIGuiComponent> components = new ArrayList<EMIGuiComponent>();
     protected int bottomY;
     protected int topY;
     protected int rightX;
     protected int leftX;
 
-    public abstract void initGUI();
+    public void initGUI(EMIGuiAPI api){
+        this.api = api;
+        this.components.clear();
+    }
+
+    public EMIGuiAPI getApi(){
+        return api;
+    }
+
+    public boolean charInput(char chr, int modifiers){
+        for(EMIGuiComponent comp : components){
+            if(comp instanceof EMITextBox && ((EMITextBox)comp).isInUse()){
+                ((EMITextBox)comp).writeChar(chr, modifiers);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void keyboardInput(int keyCode, int scanCode, int modifiers){
         components.forEach(component -> component.onKey(keyCode, scanCode, modifiers));
@@ -26,18 +44,21 @@ public abstract class EMIAbstractGui {
     }
 
     public void render(EMIMatrix matrices, int mouseX, int mouseY, float delta){
-        leftX = this.api.getInventoryX()+2;
-        rightX = this.api.getX() + this.api.getWidth()-2;
+        leftX = this.api.getInventoryX() + 2;
+        rightX = this.api.getX() + this.api.getWidth() - 2;
         topY = this.api.getY() + 2;
-        bottomY = this.api.getY() + this.api.getHeight()-2;
+        bottomY = this.api.getY() + this.api.getHeight() - 2;
     }
 
     public void drawComponents(EMIMatrix matrices, int mouseX, int mouseY, float delta){
-        components.forEach(component -> component.draw(matrices, mouseX, mouseY, delta));
+        components.forEach(component -> {
+            component.draw(matrices, mouseX, mouseY, delta);
+            if(component instanceof EMISlot)
+                drawEMISlot(matrices, mouseX, mouseY, (EMISlot) component);
+        });
     }
 
-    public void drawEMISlot(EMIMatrix matrices, int mouseX, int mouseY, EMISlot slot){
-        slot.updateSlot(mouseX, mouseY, api);
+    private void drawEMISlot(EMIMatrix matrices, int mouseX, int mouseY, EMISlot slot){;
 
         api.getDrawItem(slot.getStack(), slot.getX(), slot.getY(), "");
         if(slot.isHovered()) {

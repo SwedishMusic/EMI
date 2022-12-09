@@ -10,7 +10,8 @@
     "ScreenInjector",
     "MatrixMixin",
     "StackMixin",
-    "TextBoxMixin"
+    "TextBoxMixin",
+    "CreativeScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

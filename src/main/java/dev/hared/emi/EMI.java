@@ -6,6 +6,7 @@ import dev.hared.emi.api.EMIStack;
 import dev.hared.emi.api.IEMIListener;
 import dev.hared.emi.gui.EMIAbstractGui;
 import dev.hared.emi.gui.EMIBasicGui;
+import dev.hared.emi.gui.EMIItemsGUI;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -26,8 +27,8 @@ public class EMI implements ClientModInitializer, IEMIListener {
     public void onInitializeClient(){
         EMIGuiAPI.addListener(this);
         modInstance = this;
-        this.addEMIGUI(new EMIBasicGui());
-        this.currentGUI = this.guiRegistry.get(EMIBasicGui.class.getName());
+        this.addEMIGUI(new EMIItemsGUI());
+        this.currentGUI = this.guiRegistry.get(EMIItemsGUI.class.getName());
     }
 
     public static EMI getInstance(){
@@ -42,15 +43,9 @@ public class EMI implements ClientModInitializer, IEMIListener {
         return false;
     }
 
-    private <T extends EMIAbstractGui> void handleRenderer(EMIMatrix matrices, int mouseX, int mouseY, float delta, T emiGui) {
-        if(this.currentGUI.api != null)
-            emiGui.render(matrices, mouseX, mouseY, delta);
-    }
-
     public boolean setGUI(String clazz){
         if(this.guiRegistry.containsKey(clazz) && !this.currentGUI.getClass().getName().equals(clazz)){
             this.currentGUI = this.guiRegistry.get(clazz);
-            this.currentGUI.initGUI();
             return true;
         }
         return false;
@@ -58,12 +53,17 @@ public class EMI implements ClientModInitializer, IEMIListener {
 
     @Override
     public void render(EMIMatrix matrices, int mouseX, int mouseY, float delta) {
-            this.currentGUI.render(matrices, mouseX, mouseY, delta);
+        this.currentGUI.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
     public void keyPressed(int keyCode, int scanCode, int modifiers) {
         this.currentGUI.keyboardInput(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charInput(char chr, int modifiers) {
+        return this.currentGUI.charInput(chr,  modifiers);
     }
 
     @Override
@@ -73,7 +73,9 @@ public class EMI implements ClientModInitializer, IEMIListener {
 
     @Override
     public void getAPI(EMIGuiAPI api) {
-        this.currentGUI.api = api;
+        if(this.currentGUI.getApi() == null || this.currentGUI.getApi() != api){
+            this.currentGUI.initGUI(api);
+        }
     }
 
     public EMIStack[] EMIItemList() {

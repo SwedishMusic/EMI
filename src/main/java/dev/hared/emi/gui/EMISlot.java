@@ -1,9 +1,11 @@
 package dev.hared.emi.gui;
 
 import dev.hared.emi.api.EMIGuiAPI;
+import dev.hared.emi.api.EMIGuiComponent;
+import dev.hared.emi.api.EMIMatrix;
 import dev.hared.emi.api.EMIStack;
 
-public class EMISlot {
+public class EMISlot implements EMIGuiComponent {
 
     private EMIStack stack;
 
@@ -25,7 +27,7 @@ public class EMISlot {
         this(null, 0, 0);
     }
 
-    public void updateSlot(int mouseX, int mouseY, EMIGuiAPI api){
+    public void draw(EMIMatrix matrix, int mouseX, int mouseY, float delta){
         int i = this.x;
         int j = this.y;
         this.hovered = (mouseX >= i) && (mouseY >= j) && (mouseX < i + 16) && (mouseY < j + 16);
@@ -61,5 +63,15 @@ public class EMISlot {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    @Override
+    public void onKey(int keyCode, int scanCode, int modifiers) {
+        //Unused
+    }
+
+    @Override
+    public void onMouse(double mouseX, double mouseY, int button) {
+        //Unused
     }
 }
